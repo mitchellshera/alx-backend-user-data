@@ -96,9 +96,9 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     Uses environment variables for credentials.
     """
     try:
-        username = os.getenv("PERSONAL_DATA_DB_USERNAME", "root")
-        password = os.getenv("PERSONAL_DATA_DB_PASSWORD", "")
-        host = os.getenv("PERSONAL_DATA_DB_HOST", "localhost")
+        username = os.getenv("PERSONAL_DATA_DB_USERNAME") or "root"
+        password = os.getenv("PERSONAL_DATA_DB_PASSWORD") or ""
+        host = os.getenv("PERSONAL_DATA_DB_HOST") or "localhost"
         db_name = os.getenv("PERSONAL_DATA_DB_NAME")
 
         connection = mysql.connector.connect(
