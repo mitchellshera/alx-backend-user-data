@@ -10,7 +10,6 @@ import logging
 import os
 import mysql.connector
 from mysql.connector import Error
-from datetime import datetime
 
 
 PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
@@ -126,7 +125,8 @@ def main():
         cursor.execute("SELECT * FROM users;")
         fields = cursor.column_names
         for row in cursor:
-            message = "".join("{}={}; ".format(k, v) for k, v in zip(fields, row))
+            message = "".join("{}={}; ".format(
+                k, v) for k, v in zip(fields, row))
             logger.info(message.strip())
     except mysql.connector.Error as e:
         logger.error(f"Error executing the query: {e}")
