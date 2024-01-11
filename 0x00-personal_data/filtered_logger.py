@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 """
 This module provides a function for obfuscating log messages by replacing specified field values.
 """
@@ -22,8 +21,10 @@ def filter_datum(fields: List[str], redaction: str, message: str, separator: str
         str: The obfuscated log message.
     """
     for field in fields:
-        pattern = re.compile(fr'(?<={field}=)[^{separator}]+')
-        message = pattern.sub(redaction, message)
-    return message
+        message = re.sub(f"(?<={field})=.+?{separator}",
+                         f"={redaction}{separator}", message)
+    return f'{separator} '.join(re.split(separator, message)).strip()
+
+
 if __name__ == "__main__":
     pass
