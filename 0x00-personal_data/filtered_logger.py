@@ -8,26 +8,25 @@ import re
 from typing import List
 import logging
 
-
 PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
 
 
 def filter_datum(fields: List[str], redaction: str,
                  message: str, separator: str) -> str:
     """
-    Obscures specified fields in a log message.
+    Obfuscates specified fields in a log message.
 
     Args:
         fields (List[str]): A list of strings
-        representing fields to obscure in the log message.
+        representing fields to obfuscate in the log message.
         redaction (str): A string representing
-        the value by which the field will be obscured.
+        the value by which the field will be obfuscated.
         message (str): A string representing the log line.
         separator (str): A string representing the
         character separating all fields in the log line.
 
     Returns:
-        str: The obscured log message.
+        str: The obfuscated log message.
     """
     for field in fields:
         message = re.sub(field + '=.*?' + separator,
@@ -41,10 +40,10 @@ class RedactingFormatter(logging.Formatter):
 
     This class extends the logging.Formatter class
     and provides a custom log formatting
-    with obscured sensitive information in log records.
+    with redacted sensitive information in log records.
 
     Attributes:
-        redaction (str): The string used for obscuring sensitive information.
+        redaction (str): The string used for redacting sensitive information.
         format_str (str): The log record format.
         separator (str): The character separating fields in log messages.
     """
@@ -65,7 +64,7 @@ class RedactingFormatter(logging.Formatter):
         return redacted
 
 
-def get_logger():
+def get_logger() -> logging.Logger:
     """
     Get a logger named "user_data" with a StreamHandler and RedactingFormatter.
 
@@ -77,11 +76,11 @@ def get_logger():
     logger.propagate = False
 
     # Create a StreamHandler
-    handler = logging.StreamHandler()
+    stream_handler = logging.StreamHandler()
     formatter = RedactingFormatter(PII_FIELDS)
 
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
+    stream_handler.setFormatter(formatter)
+    logger.addHandler(stream_handler)
     return logger
 
 
