@@ -12,7 +12,7 @@ import logging
 PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
 
 
-def filter_datum(fields: list[str], redaction: str,
+def filter_datum(fields: List[str], redaction: str,
                  message: str, separator: str) -> str:
     """
     Obscures specified fields in a log message.
@@ -60,9 +60,9 @@ class RedactingFormatter(logging.Formatter):
     def format(self, record: logging.LogRecord) -> str:
         """Format a log message"""
         message = super(RedactingFormatter, self).format(record)
-        obscured = filter_datum(self.fields, self.REDACTION,
+        redacted = filter_datum(self.fields, self.REDACTION,
                                 message, self.SEPARATOR)
-        return obscured
+        return redacted
 
 
 def get_logger():
