@@ -10,8 +10,29 @@ import logging
 
 
 PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
-FIELDS = ('name', 'email', 'phone', 'ssn', 'password',
-          'ip', 'last_login', 'user_agent')
+
+
+def filter_datum(fields: List[str], redaction: str,
+                 message: str, separator: str) -> str:
+    """
+    Obfuscates specified fields in a log message.
+
+    Args:
+        fields (List[str]): A list of strings
+        representing fields to obfuscate in the log message.
+        redaction (str): A string representing
+        the value by which the field will be obfuscated.
+        message (str): A string representing the log line.
+        separator (str): A string representing the
+        character separating all fields in the log line.
+
+    Returns:
+        str: The obfuscated log message.
+    """
+    for field in fields:
+        message = re.sub(field + '=.*?' + separator,
+                         field + '=' + redaction + separator, message)
+    return message
 
 
 class RedactingFormatter(logging.Formatter):
@@ -43,28 +64,6 @@ class RedactingFormatter(logging.Formatter):
                                 message, self.SEPARATOR)
         return redacted
 
-def filter_datum(fields: List[str], redaction: str,
-                 message: str, separator: str) -> str:
-    """
-    Obfuscates specified fields in a log message.
-
-    Args:
-        fields (List[str]): A list of strings
-        representing fields to obfuscate in the log message.
-        redaction (str): A string representing
-        the value by which the field will be obfuscated.
-        message (str): A string representing the log line.
-        separator (str): A string representing the
-        character separating all fields in the log line.
-
-    Returns:
-        str: The obfuscated log message.
-    """
-    for field in fields:
-        message = re.sub(field + '=.*?' + separator,
-                         field + '=' + redaction + separator, message)
-    return message
-
 
 def get_logger():
     """
@@ -83,6 +82,7 @@ def get_logger():
     stream_handler.setFormatter(formatter)
     logger.addHandler(stream_handler)
     return logger
+
 
 if __name__ == "__main__":
     pass
