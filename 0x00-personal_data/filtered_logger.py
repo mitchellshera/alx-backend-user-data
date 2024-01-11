@@ -7,6 +7,12 @@ log messages by replacing specified field values.
 import re
 from typing import List
 import logging
+import os
+import mysql.connector
+from mysql.connector import Error
+from datetime import datetime
+from filtered_logger import get_db, PII_FIELDS
+
 
 PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
 
@@ -84,5 +90,80 @@ def get_logger() -> logging.Logger:
     return logger
 
 
+def get_db():
+    """
+    Connects to the MySQL database and returns a connection object.
+    Uses environment variables for credentials.
+    """
+    try:
+        username = os.getenv("PERSONAL_DATA_DB_USERNAME", "root")
+        password = os.getenv("PERSONAL_DATA_DB_PASSWORD", "")
+        host = os.getenv("PERSONAL_DATA_DB_HOST", "localhost")
+        db_name = os.getenv("PERSONAL_DATA_DB_NAME")
+
+        connection = mysql.connector.connect(
+            user=username,
+            password=password,
+            host=host,
+            database=db_name
+        )
+
+        return connection
+
+    except Error as e:
+        print(f"Error connecting to the database: {e}")
+        raise
+
+
+def main():
+    # Set up logging
+    logger = logging.getLogger("user_data")
+    logger.setLevel(logging.INFO)
+    logger.propagate = False
+
+    # Create a StreamHandler
+    stream_handler = logging.StreamHandler()
+    formatter = logging.Formatter("[HOLBERTON] user_data INFO %(asctime)-15s: %(message)s", "%Y-%m-%d %H:%M:%S")
+    stream_handler.setFormatter(formatter)
+
+    # Add the StreamHandler to the logger
+    logger.addHandler(stream_handler)
+
+    # Connect to the database
+    db = get_db()
+    cursor = db.cursor()
+
+    # Retrieve all rows in the users table
+    cursor.execute("SELECT * FROM users;")
+    rows = cursor.fetchall()
+
+    # Display each row under a filtered format
+    for row in rows:
+        filtered_row = filter_data(row)
+        logger.info(filtered_row)
+
+    # Close cursor and database connection
+    cursor.close()
+    db.close()
+
+def filter_data(row):
+    """
+    Filters sensitive fields in a database row.
+
+    Args:
+        row: A tuple representing a row from the users table.
+
+    Returns:
+        str: A filtered string representation of the row.
+    """
+    filtered_row = []
+    for index, value in enumerate(row):
+        field_name = cursor.description[index][0]
+        if field_name in PII_FIELDS:
+            value = "***"
+        filtered_row.append(f"{field_name}={value}")
+    
+    return "; ".join(filtered_row)
+
 if __name__ == "__main__":
-    pass
+    main()
