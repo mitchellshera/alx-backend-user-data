@@ -23,23 +23,23 @@ class RedactingFormatter(logging.Formatter):
     with redacted sensitive information in log records.
 
     Attributes:
-        REDACTION (str): The string used for redacting sensitive information.
-        FORMAT (str): The log record format.
-        SEPARATOR (str): The character separating fields in log messages.
-        """
-    REDACTION = "***"
-    FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
-    SEPARATOR = ";"
+        redaction (str): The string used for redacting sensitive information.
+        format_str (str): The log record format.
+        separator (str): The character separating fields in log messages.
+    """
+    redaction = "***"
+    format_str = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
+    separator = ";"
 
     def __init__(self, fields: List[str]):
         """Initialize RedactingFormatter"""
-        super(RedactingFormatter, self).__init__(self.FORMAT)
+        super(RedactingFormatter, self).__init__(self.format_str)
         self.fields = fields
 
     def format(self, record: logging.LogRecord) -> str:
         """Format a log message"""
-        return filter_datum(self.fields, self.REDACTION,
-                            super().format(record), self.SEPARATOR)
+        return filter_datum(self.fields, self.redaction,
+                            super().format(record), self.separator)
 
 
 def filter_datum(fields: List[str], redaction: str,
@@ -72,11 +72,19 @@ def get_logger():
     Returns:
         logging.Logger: The configured logger.
     """
-    logger = logging.Logger('user_data', level=logging.INFO)
-    # logger.propagate = False
-    streamHandler = logging.StreamHandler()
-    streamHandler.setFormatter(RedactingFormatter(PII_FIELDS))
-    logger.addHandler(streamHandler)
+    logger = logging.getLogger("user_data")
+    logger.setLevel(logging.INFO)
+
+    # Create a StreamHandler
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(RedactingFormatter(fields=PII_FIELDS))
+
+    # Add the StreamHandler to the logger
+    logger.addHandler(stream_handler)
+
+    # Disable propagation to other loggers
+    logger.propagate = False
+
     return logger
 
 if __name__ == "__main__":
