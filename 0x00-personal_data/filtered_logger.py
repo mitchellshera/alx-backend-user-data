@@ -11,7 +11,6 @@ import os
 import mysql.connector
 from mysql.connector import Error
 from datetime import datetime
-from filtered_logger import get_db, PII_FIELDS
 
 
 PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
@@ -116,54 +115,25 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
 
 
 def main():
-    # Set up logging
-    logger = logging.getLogger("user_data")
-    logger.setLevel(logging.INFO)
-    logger.propagate = False
-
-    # Create a StreamHandler
-    stream_handler = logging.StreamHandler()
-    formatter = logging.Formatter("[HOLBERTON] user_data INFO %(asctime)-15s: %(message)s", "%Y-%m-%d %H:%M:%S")
-    stream_handler.setFormatter(formatter)
-
-    # Add the StreamHandler to the logger
-    logger.addHandler(stream_handler)
-
-    # Connect to the database
+    """
+    Main entry point.
+    """
     db = get_db()
+    logger = get_logger()
     cursor = db.cursor()
 
-    # Retrieve all rows in the users table
-    cursor.execute("SELECT * FROM users;")
-    rows = cursor.fetchall()
+    try:
+        cursor.execute("SELECT * FROM users;")
+        fields = cursor.column_names
+        for row in cursor:
+            message = "".join("{}={}; ".format(k, v) for k, v in zip(fields, row))
+            logger.info(message.strip())
+    except mysql.connector.Error as e:
+        logger.error(f"Error executing the query: {e}")
+    finally:
+        cursor.close()
+        db.close()
 
-    # Display each row under a filtered format
-    for row in rows:
-        filtered_row = filter_data(row)
-        logger.info(filtered_row)
-
-    # Close cursor and database connection
-    cursor.close()
-    db.close()
-
-def filter_data(row):
-    """
-    Filters sensitive fields in a database row.
-
-    Args:
-        row: A tuple representing a row from the users table.
-
-    Returns:
-        str: A filtered string representation of the row.
-    """
-    filtered_row = []
-    for index, value in enumerate(row):
-        field_name = cursor.description[index][0]
-        if field_name in PII_FIELDS:
-            value = "***"
-        filtered_row.append(f"{field_name}={value}")
-    
-    return "; ".join(filtered_row)
 
 if __name__ == "__main__":
     main()
