@@ -72,19 +72,11 @@ def get_logger():
     Returns:
         logging.Logger: The configured logger.
     """
-    logger = logging.getLogger("user_data")
-    logger.setLevel(logging.INFO)
-
-    # Create a StreamHandler
-    stream_handler = logging.StreamHandler()
-    stream_handler.setFormatter(RedactingFormatter(fields=PII_FIELDS))
-
-    # Add the StreamHandler to the logger
-    logger.addHandler(stream_handler)
-
-    # Disable propagation to other loggers
-    logger.propagate = False
-
+    logger = logging.Logger('user_data', level=logging.INFO)
+    # logger.propagate = False
+    streamHandler = logging.StreamHandler()
+    streamHandler.setFormatter(RedactingFormatter(PII_FIELDS))
+    logger.addHandler(streamHandler)
     return logger
 
 if __name__ == "__main__":
