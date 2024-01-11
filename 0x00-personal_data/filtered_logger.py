@@ -8,9 +8,18 @@ import re
 from typing import List
 import logging
 
-class RedactingFormatter(logging.Formatter):
-    """ Redacting Formatter class """
 
+class RedactingFormatter(logging.Formatter):
+    '''Redacting Formatter class.
+
+    This class extends the logging.Formatter class
+    and provides a custom log formatting
+    with redacted sensitive information in log records.
+
+    Attributes:
+        REDACTION (str): The string used for redacting sensitive information.
+        FORMAT (str): The log record format.
+        SEPARATOR (str): The character separating fields in log messages.'''
     REDACTION = "***"
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
     SEPARATOR = ";"
