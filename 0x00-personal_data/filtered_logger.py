@@ -15,19 +15,19 @@ PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
 def filter_datum(fields: List[str], redaction: str,
                  message: str, separator: str) -> str:
     """
-    Obfuscates specified fields in a log message.
+    Obscures specified fields in a log message.
 
     Args:
         fields (List[str]): A list of strings
-        representing fields to obfuscate in the log message.
+        representing fields to obscure in the log message.
         redaction (str): A string representing
-        the value by which the field will be obfuscated.
+        the value by which the field will be obscured.
         message (str): A string representing the log line.
         separator (str): A string representing the
         character separating all fields in the log line.
 
     Returns:
-        str: The obfuscated log message.
+        str: The obscured log message.
     """
     for field in fields:
         message = re.sub(field + '=.*?' + separator,
@@ -41,10 +41,10 @@ class RedactingFormatter(logging.Formatter):
 
     This class extends the logging.Formatter class
     and provides a custom log formatting
-    with redacted sensitive information in log records.
+    with obscured sensitive information in log records.
 
     Attributes:
-        redaction (str): The string used for redacting sensitive information.
+        redaction (str): The string used for obscuring sensitive information.
         format_str (str): The log record format.
         separator (str): The character separating fields in log messages.
     """
@@ -60,9 +60,9 @@ class RedactingFormatter(logging.Formatter):
     def format(self, record: logging.LogRecord) -> str:
         """Format a log message"""
         message = super(RedactingFormatter, self).format(record)
-        redacted = filter_datum(self.fields, self.REDACTION,
+        obscured = filter_datum(self.fields, self.REDACTION,
                                 message, self.SEPARATOR)
-        return redacted
+        return obscured
 
 
 def get_logger():
