@@ -74,6 +74,7 @@ def get_logger():
     """
     logger = logging.getLogger("user_data")
     logger.setLevel(logging.INFO)
+    logger.propagate = False
 
     # Create a StreamHandler
     stream_handler = logging.StreamHandler()
