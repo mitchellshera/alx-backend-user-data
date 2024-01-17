@@ -25,7 +25,7 @@ def forbidden_endpoint() -> str:
 
 @app_views.route('/status', methods=['GET'], strict_slashes=False)
 def status() -> str:
-    """ GET /api/v1/status
+    """ GET /status
     Return:
       - the status of the API
     """
@@ -34,7 +34,7 @@ def status() -> str:
 
 @app_views.route('/stats/', strict_slashes=False)
 def stats() -> str:
-    """ GET /api/v1/stats
+    """ GET /stats
     Return:
       - the number of each objects
     """
