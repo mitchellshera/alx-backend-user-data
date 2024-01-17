@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Route module for the API
+Main module for the API
 """
 from flask import Flask, jsonify, abort, request
 from flask_cors import CORS
@@ -19,6 +19,7 @@ if AUTH_TYPE == "auth":
     from api.v1.auth.auth import Auth as AuthType
     auth = AuthType()
 
+
 def before_request():
     """
     Filter each request before it's handled by the proper route
@@ -32,31 +33,42 @@ def before_request():
         if auth.current_user(request) is None:
             abort(403, description="Forbidden")
 
+
 @app.errorhandler(404)
 def not_found(error) -> str:
     """ Not found handler
+    Returns:
+        JSON response with a 404 error message
     """
     return jsonify({"error": "Not found"}), 404
+
 
 @app.errorhandler(401)
 def unauthorized(error) -> str:
     """ Unauthorized handler
+    Returns:
+        JSON response with a 401 error message
     """
     return jsonify({"error": "Unauthorized"}), 401
+
 
 @app.errorhandler(403)
 def forbidden(error) -> str:
     """ Forbidden handler
+    Returns:
+        JSON response with a 403 error message
     """
     return jsonify({"error": "Forbidden"}), 403
+
 
 @app.route('/api/v1/status', methods=['GET'], strict_slashes=False)
 def status() -> str:
     """ GET /api/v1/status
-    Return:
-      - the status of the API
+    Returns:
+        JSON response with the status of the API
     """
     return jsonify({"status": "OK"})
+
 
 if __name__ == "__main__":
     host = getenv("API_HOST", "0.0.0.0")
