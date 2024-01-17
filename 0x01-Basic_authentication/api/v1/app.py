@@ -15,7 +15,7 @@ app.register_blueprint(app_views)
 
 auth = None
 
-AUTH_TYPE = getenv("AUTH_TYPE")
+AUTH_TYPE = os.getenv("AUTH_TYPE")
 
 if AUTH_TYPE == "auth":
     from api.v1.auth.auth import Auth as AuthType
@@ -24,12 +24,14 @@ elif AUTH_TYPE == "basic_auth":
     from api.v1.auth.basic_auth import BasicAuth
     auth = BasicAuth()
 
+
+@app.before_request
 def before_request():
     """
     Filter each request before it's handled by the proper route
     """
     if auth is None:
-        return
+        pass
     excluded_paths = ['/api/v1/status/',
                       '/api/v1/unauthorized/', '/api/v1/forbidden/']
     if auth.require_auth(request.path, excluded_paths):

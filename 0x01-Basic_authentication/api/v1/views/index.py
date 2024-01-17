@@ -11,7 +11,7 @@ def unauthorized_endpoint() -> str:
     Raises:
       - 401 error using abort
     """
-    abort(401)
+    abort(401, description="Unauthorized")
 
 
 @app_views.route('/forbidden', methods=['GET'], strict_slashes=False)
@@ -20,7 +20,7 @@ def forbidden_endpoint() -> str:
     Return:
       - JSON response for forbidden request
     """
-    abort(403)
+    abort(403, description="Forbidden")
 
 
 @app_views.route('/status', methods=['GET'], strict_slashes=False)
