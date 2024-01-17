@@ -37,6 +37,7 @@ class Auth:
         if header is None:
             return None
         return header
+
     def current_user(self, request=None) -> TypeVar('User'):
         """Get the current user from the Flask request."""
         return None
