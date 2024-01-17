@@ -74,10 +74,10 @@ class BasicAuth(Auth):
 
         user_instance = users[0]
 
-        if not user_instance.is_valid_password(user_pwd):
-            return None
+        if user_instance.is_valid_password(user_pwd):
+            return user_instance
 
-        return user_instance
+        return None
 
     def current_user(self, request=None) -> TypeVar('User'):
         """
