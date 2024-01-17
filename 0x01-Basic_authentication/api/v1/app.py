@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Main module for the API
+Main route module for the API
 """
 from flask import Flask, jsonify, abort, request
 from flask_cors import CORS
@@ -59,15 +59,6 @@ def forbidden(error) -> str:
         JSON response with a 403 error message
     """
     return jsonify({"error": "Forbidden"}), 403
-
-
-@app.route('/api/v1/status', methods=['GET'], strict_slashes=False)
-def status() -> str:
-    """ GET /api/v1/status
-    Returns:
-        JSON response with the status of the API
-    """
-    return jsonify({"status": "OK"})
 
 
 if __name__ == "__main__":
