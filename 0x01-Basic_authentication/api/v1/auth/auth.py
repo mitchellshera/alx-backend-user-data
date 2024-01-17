@@ -31,10 +31,12 @@ class Auth:
         """
         Returns the authorization header from a request object
         """
-        if request is None or 'Authorization' not in request.headers:
+        if request is None:
             return None
-        return request.headers['Authorization']
-
+        header = request.headers.get('Authorization')
+        if header is None:
+            return None
+        return header
     def current_user(self, request=None) -> TypeVar('User'):
         """Get the current user from the Flask request."""
         return None
