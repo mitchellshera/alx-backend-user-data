@@ -39,8 +39,6 @@ def before_request():
 @app.errorhandler(404)
 def not_found(error) -> str:
     """ Not found handler
-    Returns:
-        JSON response with a 404 error message
     """
     return jsonify({"error": "Not found"}), 404
 
@@ -48,8 +46,6 @@ def not_found(error) -> str:
 @app.errorhandler(401)
 def unauthorized(error) -> str:
     """ Unauthorized handler
-    Returns:
-        JSON response with a 401 error message
     """
     return jsonify({"error": "Unauthorized"}), 401
 
@@ -57,8 +53,6 @@ def unauthorized(error) -> str:
 @app.errorhandler(403)
 def forbidden(error) -> str:
     """ Forbidden handler
-    Returns:
-        JSON response with a 403 error message
     """
     return jsonify({"error": "Forbidden"}), 403
 
