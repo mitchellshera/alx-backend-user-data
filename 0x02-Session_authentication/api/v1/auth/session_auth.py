@@ -3,8 +3,10 @@
 SessionAuth module
 """
 import uuid
+from uuid import uuid4
 from api.v1.auth.auth import Auth
 from models.user import User
+from .auth import Auth
 
 
 class SessionAuth(Auth):
@@ -34,9 +36,12 @@ class SessionAuth(Auth):
         return self.user_id_by_session_id.get(session_id)
 
     def current_user(self, request=None):
-        if request is None:
-            return None
-
+        """Return a user instance based on a cookie value
+        Args:
+            request : request object containing cookie
+        Return:
+            User instance
+        """        
         session_cookie = self.session_cookie(request)
         user_id = self.user_id_for_session_id(session_cookie)
         user = User.get(user_id)
