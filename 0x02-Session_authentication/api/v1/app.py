@@ -30,7 +30,6 @@ def before_request():
     """
     Filter each request before it's handled by the proper route
     """
-    
     if auth is None:
         pass
     excluded_paths = ['/api/v1/status/',
