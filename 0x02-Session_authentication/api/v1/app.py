@@ -30,6 +30,7 @@ def before_request():
     """
     Filter each request before it's handled by the proper route
     """
+    
     if auth is None:
         pass
     excluded_paths = ['/api/v1/status/',
@@ -39,6 +40,7 @@ def before_request():
             abort(401, description="Unauthorized")
         if auth.current_user(request) is None:
             abort(403, description="Forbidden")
+    request.current_user = auth.current_user(request)
 
 
 @app.errorhandler(404)
