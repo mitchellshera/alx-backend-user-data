@@ -7,6 +7,7 @@ from flask_cors import CORS
 from os import getenv
 from api.v1.views import app_views
 import os
+from api.v1.auth.session_auth import SessionAuth
 
 
 app = Flask(__name__)
@@ -34,7 +35,7 @@ def before_request():
     Filter each request before it's handled by the proper route
     """
     if auth is None:
-        pass
+        return
     excluded_paths = ['/api/v1/status/', '/api/v1/auth_session/login/'
                       '/api/v1/unauthorized/', '/api/v1/forbidden/']
     if auth.require_auth(request.path, excluded_paths):
