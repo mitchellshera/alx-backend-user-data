@@ -5,6 +5,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from user import Base, User
+from sqlalchemy.exc import NoResultFound, InvalidRequestError
 
 
 class DB:
@@ -26,3 +27,14 @@ class DB:
         self._session.add(new_user)
         self._session.commit()
         return new_user
+
+    def find_user_by(self, **kwargs) -> User:
+        try:
+            user = self._session.query(User).filter_by(**kwargs).first()
+            if user is None:
+                raise NoResultFound("No result found for the given query arguments.")
+            return user
+        except InvalidRequestError as e:
+            raise e  # Reraise the InvalidRequestError
+        except NoResultFound:
+            raise NoResultFound("No result found for the given query arguments.")
