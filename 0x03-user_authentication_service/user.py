@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 '''module for user.py'''
 
-from sqlalchemy import Column, Integer, String, Sequence
+from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 
 
