@@ -30,6 +30,12 @@ class Auth:
     def __init__(self) -> None:
         self._db = DB()
 
+    def _generate_uuid() -> str:
+        """
+        Generate a uuid and return its string representation
+        """
+        return str(uuid4())
+
     def register_user(self, email: str, password: str) -> User:
         """
         Register a new user with the provided email and password.
@@ -63,9 +69,3 @@ class Auth:
         user_password = user.hashed_password
         psswd = password.encode("utf-8")
         return bcrypt.checkpw(psswd, user_password)
-    
-    def _generate_uuid() -> str:
-        """
-        Generate a uuid and return its string representation
-        """
-        return str(uuid4())
