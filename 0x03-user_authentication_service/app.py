@@ -14,21 +14,22 @@ def welcome():
     '''welcome message'''
     return jsonify({"message": "Bienvenue"})
 
+
 @app.route('/users', methods=['POST'])
 def register_user():
     '''register user'''
     try:
         email = request.form['email']
         password = request.form['password']
-        
+
         user = AUTH.register_user(email, password)
-        
+
         response_data = {"email": user.email, "message": "user created"}
         status_code = 200
     except ValueError as e:
         response_data = {"message": str(e)}
         status_code = 400
-    
+
     return jsonify(response_data), status_code
 
 
