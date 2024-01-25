@@ -6,7 +6,7 @@ from db import DB
 from user import User
 from sqlalchemy.orm.exc import NoResultFound
 from uuid import uuid4
-from typing import Union
+from typing import Union, Optional
 
 
 def _hash_password(password: str) -> bytes:
@@ -82,3 +82,34 @@ class Auth:
         session_id = _generate_uuid()  # Directly call the standalone function
         self._db.update_user(user.id, session_id=session_id)
         return session_id
+
+    def get_user_from_session_id(self, session_id: Optional[str]) -> Optional[User]:
+        """
+        Get the user corresponding to the given session_id.
+
+        Args:
+            session_id (str): The session ID.
+
+        Returns:
+            Optional[User]: The corresponding User or None if not found.
+        """
+        if session_id is None:
+            return None
+
+        try:
+            user = self._db.find_user_by(session_id=session_id)
+            return user
+        except NoResultFound:
+            return None
+
+    def destroy_session(self, user_id: int) -> None:
+        """
+        Destroy the session for the user with the given user_id.
+
+        Args:
+            user_id (int): The user ID.
+
+        Returns:
+            None
+        """
+        self._db.update_user(user_id, session_id=None)
