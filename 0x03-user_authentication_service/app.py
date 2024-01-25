@@ -54,13 +54,17 @@ def login():
     else:
         abort(401, "Unauthorized")
 
+
 @app.route('/sessions', methods=['DELETE'])
 def logout():
     """
     Logout function to respond to the DELETE /sessions route.
-    The request is expected to contain the session ID as a cookie with key "session_id".
-    Find the user with the requested session ID. If the user exists, destroy the session
-    and redirect the user to GET /. If the user does not exist, respond with a 403 HTTP status.
+    The request is expected to contain the session ID
+    as a cookie with key "session_id".
+    Find the user with the requested session ID. If the
+    user exists, destroy the session
+    and redirect the user to GET /. If the user does not
+    exist, respond with a 403 HTTP status.
     """
     session_id = request.cookies.get('session_id')
 
@@ -79,6 +83,7 @@ def logout():
 
     # Redirect the user to GET /
     return redirect('/')
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
