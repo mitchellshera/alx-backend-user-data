@@ -108,21 +108,16 @@ def profile():
 def get_reset_password_token():
     '''get_reset_password_token function to respond
     to the POST /reset_password route.'''
-    if request.method == 'POST':
-        email = request.form.get('email')
+    email = request.form.get('email')
+    try:
+        reset_token = AUTH.get_reset_password_token(email)
+    except ValueError as e:
+        abort(403, description=str(e))
 
-        if not email:
-            abort(400, description='Email is required.')
-
-        try:
-            reset_token = auth.get_reset_password_token(email)
-        except ValueError as e:
-            abort(403, description=str(e))
-
-        return jsonify({
-            'email': email,
-            'reset_token': reset_token
-        }), 200
+    return jsonify({
+        'email': email,
+        'reset_token': reset_token
+    }), 200
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
