@@ -84,6 +84,24 @@ def logout():
     # Redirect the user to GET /
     return redirect('/')
 
+@app.route('/profile', methods=['GET'])
+def profile():
+    '''profile function to respond to the GET /profile route.'''
+    session_id = request.cookies.get('session_id')
+
+    if not session_id:
+        # No session ID provided
+        abort(403)
+
+    user = AUTH.get_user_from_session_id(session_id)
+
+    if not user:
+        # User not found
+        abort(403)
+
+    # User found, respond with JSON payload
+    response_data = {"email": user.email}
+    return jsonify(response_data), 200
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
