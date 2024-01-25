@@ -123,17 +123,17 @@ def get_reset_password_token():
 @app.route('/reset_password', methods=['PUT'], strict_slashes=False)
 def update_password() -> str:
     '''update_password function to respond to the PUT /reset_password route.'''
+    email = request.form['email']
+    reset_token = request.form['reset_token']
+    new_password = request.form['new_password']
     try:
-        email = request.form['email']
-        reset_token = request.form['reset_token']
-        new_password = request.form['new_password']
-
         AUTH.update_password(reset_token, new_password)
-
-        return jsonify({"email": email, "message": "Password updated"}), 200
-
     except ValueError as e:
         return abort(403, str(e))
+     
+    return jsonify({"email": email, "message": "Password updated"}), 200
+
+
 
 
 if __name__ == "__main__":
