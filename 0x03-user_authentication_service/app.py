@@ -84,6 +84,7 @@ def logout():
     # Redirect the user to GET /
     return redirect('/')
 
+
 @app.route('/profile', methods=['GET'])
 def profile():
     '''profile function to respond to the GET /profile route.'''
@@ -102,6 +103,7 @@ def profile():
     # User found, respond with JSON payload
     response_data = {"email": user.email}
     return jsonify(response_data), 200
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
