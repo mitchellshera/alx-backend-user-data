@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 '''module for app.py'''
 
-from flask import Flask, jsonify, request, abort, make_response
+from flask import Flask, jsonify, request, abort, make_response, redirect
 from auth import Auth
 
 
@@ -54,6 +54,31 @@ def login():
     else:
         abort(401, "Unauthorized")
 
+@app.route('/sessions', methods=['DELETE'])
+def logout():
+    """
+    Logout function to respond to the DELETE /sessions route.
+    The request is expected to contain the session ID as a cookie with key "session_id".
+    Find the user with the requested session ID. If the user exists, destroy the session
+    and redirect the user to GET /. If the user does not exist, respond with a 403 HTTP status.
+    """
+    session_id = request.cookies.get('session_id')
+
+    if not session_id:
+        # No session ID provided
+        abort(403)
+
+    user = AUTH.get_user_from_session_id(session_id)
+
+    if not user:
+        # User not found
+        abort(403)
+
+    # User found, destroy the session
+    AUTH.destroy_session(user.id)
+
+    # Redirect the user to GET /
+    return redirect('/')
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
