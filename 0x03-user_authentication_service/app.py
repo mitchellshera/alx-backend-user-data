@@ -120,6 +120,7 @@ def get_reset_password_token():
         'reset_token': reset_token
     }), 200
 
+
 @app.route('/reset_password', methods=['PUT'])
 def update_password():
     try:
@@ -131,8 +132,8 @@ def update_password():
 
         return jsonify({"email": email, "message": "Password updated"}), 200
 
-    except ValueError as e:
-        return abort(403, str(e))
+    except ValueError:
+        return abort(403)
 
 
 if __name__ == "__main__":
