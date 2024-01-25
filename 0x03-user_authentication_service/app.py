@@ -104,6 +104,7 @@ def profile():
     response_data = {"email": user.email}
     return jsonify(response_data), 200
 
+
 @app.route('/reset_password', methods=['POST'])
 def get_reset_password_token():
     '''get_reset_password_token function to respond
@@ -118,6 +119,7 @@ def get_reset_password_token():
         'email': email,
         'reset_token': reset_token
     }), 200
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

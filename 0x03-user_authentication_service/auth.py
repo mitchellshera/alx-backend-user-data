@@ -132,3 +132,14 @@ class Auth:
         self._db.update_user(user.id, reset_token=reset_token)
 
         return reset_token
+
+    def update_password(self, reset_token: str, new_password: str) -> None:
+        '''update password function'''
+        try:
+            user = self._db.find_user_by(reset_token=reset_token)
+        except NoResultFound:
+            raise ValueError("Invalid reset token")
+
+        hashed_password = _hash_password(new_password)
+        self._db.update_user(
+            user.id, hashed_password=hashed_password, reset_token=None)
